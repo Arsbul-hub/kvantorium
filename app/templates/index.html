@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {{ turbo() }}
+    <title>Главная</title>
+</head>
+<body>
+<ul>
+    <li>
+        <span>Работает ячеек {{status['work'][0]}}</span>
+    </li>
+    <li>
+        <span>Выключено ячеек {{status['off'][0]}}</span>
+    </li>
+    <li>
+        <span>Ячеек в состоянии ошибки {{status['error'][0]}}</span>
+    </li>
+    <li>
+        <span>Ячеек в состоянии ожидания {{status['wait'][0]}}</span>
+    </li>
+</ul>
+{% if production_data["speed"] %}
+    <p>Скорость изготовления: {{speed}} деталей в час</p>
+
+{% else %}
+    <p>Скорость изготовления: неизвестно</p>
+
+
+
+{% if production_data["all_speed"] %}
+    <p>Общий объём выпуска готовой продукции: {{all_speed}} деталей </p>
+
+{% else %}
+    <p>Общий объём выпуска готовой продукции: неизвестно</p>
+
+{% if production_data["bad"] %}
+    <p>Процент брака: {{production_data["bad"]}} деталей </p>
+
+{% else %}
+    <p>Процент брака: неизвестно</p>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/form.css">
+
+
+</head>
+<body>
+
+
+
+<div class="form-block">
+    <h1>Войти</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        {{ form.username.label }}
+        <p>
+            {{ form.username(size=32) }}
+            {% for error in form.username.errors %}<br>
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        {{ form.password.label }}
+        <p>
+            {{ form.password(size=32) }}
+            {% for error in form.password.errors %}<br>
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.remember_me() }}
+            {{ form.remember_me.label }}
+        </p>
+        {{ form.submit() }}
+
+    </form>
+</div>
+
+</body>
+</html>
