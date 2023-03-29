@@ -7,8 +7,10 @@ tr {
 }
 th {
     margin: 0 5px;
+    padding: 5px 10px;
     border: 1px double black
 }
 td {
+    padding: 5px 10px;
     border: 1px solid black
 }

@@ -6,6 +6,7 @@
     <title>Главная</title>
     <script src="https://cdn.anychart.com/js/latest/anychart-bundle.min.js"></script>
     <link type="text/css" rel="stylesheet", href="static/css/table.css">
+    <link type="text/css" rel="stylesheet", href="static/css/base.css">
     <script>
 anychart.onDocumentLoad(function() {
 
@@ -71,10 +72,19 @@ anychart.onDocumentLoad(function() {
         <th>Загрузка за последний час</th>
         <th>Загрузка за текущий день</th>
     </tr>
+    {% for cell in table_data %}
     <tr>
-        <td>данные</td>
-        <td>данные</td>
+        <td>{{cell["index"]}}</td>
+        <td>{{cells_names[cell["index"]]}}</td>
+        <td>{{cell["status"]}}</td>
+        <td>{{cell["wait"]}}</td>
+        <td>{{cell["speed_hour"]}}</td>
+        <td>{{cell["speed_day"]}}</td>
+        <td>{{cell["work_hour"]}}</td>
+        <td>{{cell["work_day"]}}</td>
+
     </tr>
+    {% endfor %}
 </table>
 
 </body>
