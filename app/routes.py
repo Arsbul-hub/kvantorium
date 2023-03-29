@@ -23,6 +23,15 @@ def load_user(user_id):
 @login_required
 def index():
     cells_status = requests.get("http://roboprom.kvantorium33.ru/api/current").json()
+
+    work_procent = []
+    for d in cells_status["data"]:
+        for param in d["params"]:
+            if param["param"] == "status" and param["value"]:
+                w = int(time.time()) - param["timestamp"]
+                work_procent.append((w / 3600) * 100)
+    if work_procent:
+        work_procent = sum(work_procent) / len(work_procent)
     status = {
         "work": [0, []],
         "wait": [0, []],
@@ -87,7 +96,7 @@ def index():
     }
     # Скорость производства
     params = {
-        "from": int(time.time()) - 60 * 60,
+        "from": int(time.time()) - 10,  # за 10 секунд
         "param": "count",
         "cell": 6
     }
@@ -97,6 +106,7 @@ def index():
         production_data["speed"] = 0
         for i in query["data"]:
             production_data["speed"] += i["value"]
+        production_data["speed"] *= 6 * 60  # превращаем в деталей в час
     # Объём производства
     params = {
         "from": int(time.time()) - 60 * 60 * datetime.now().hour,
@@ -108,7 +118,7 @@ def index():
         production_data["all_speed"] = 0
         for i in query["data"]:
             production_data["all_speed"] += i["value"]
-    # Объём брака (НЕДОДЕЛАНО)
+    # Объём брака
     params = {
         "from": int(time.time()) - 60 * 60 * datetime.now().hour,
         "param": "count",
@@ -118,10 +128,30 @@ def index():
 
     if query["data"]:
         production_data["bad"] = 0
+        bad = 0
         for i in query["data"]:
-            production_data["bad"] += i["value"]
+            bad += i["value"]
+        production_data["bad"] = bad / production_data["all_speed"] * 100
+    # Граффик
+    graph = []
+    for hour in range(24):
+        params = {
+            "from": int(time.time()) - datetime.now().hour * 60 * 60,
+            "to": int(time.time()) - datetime.now().hour * 60 * 60 + hour * 60 * 60,
+            "param": "count",
+            "cell": 6
+        }
+        query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=params).json()
+
+        h = 0
+        for i in query["data"]:
+            if i["param"] == "count":
+                h += i["value"]
+        graph.append(h)
 
     return render_template("index.html",
+                           graph=graph,
+                           work_procent=work_procent,
                            production_data=production_data,
                            status=status,
                            mode=mode,

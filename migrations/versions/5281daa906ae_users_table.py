@@ -1,4 +1,4 @@
-"""users table
+"""users table.css
 
 Revision ID: 5281daa906ae
 Revises: 70c1650f5749

@@ -1,0 +1,14 @@
+table {
+    border: 1px solid red
+}
+tr {
+    margin-top: 10px;
+    border: 1px solid gray
+}
+th {
+    margin: 0 5px;
+    border: 1px double black
+}
+td {
+    border: 1px solid black
+}

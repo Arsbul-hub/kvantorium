@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     {{ turbo() }}
     <title>Главная</title>
+    <script src="https://cdn.anychart.com/js/latest/anychart-bundle.min.js"></script>
+    <link type="text/css" rel="stylesheet", href="static/css/table.css">
+    <script>
+anychart.onDocumentLoad(function() {
+
+  var chart = anychart.line([
+  {% for n in range(24) %}
+    {x: {{n}}, value: {{graph[n]}}},
+  {% endfor %}
+  ]);
+  chart.title("Граффик объёма выпуска продукции за день");
+  chart.container("container").draw();
+});
+
+    </script>
 </head>
 <body>
 <ul>
@@ -21,24 +36,46 @@
     </li>
 </ul>
 {% if production_data["speed"] %}
-    <p>Скорость изготовления: {{speed}} деталей в час</p>
+<p>Скорость изготовления: {{speed}} деталей в час</p>
 
 {% else %}
-    <p>Скорость изготовления: неизвестно</p>
-
+<p>Скорость изготовления: неизвестно</p>
+{% endif %}
 
 
 {% if production_data["all_speed"] %}
-    <p>Общий объём выпуска готовой продукции: {{all_speed}} деталей </p>
+<p>Общий объём выпуска готовой продукции: {{all_speed}} деталей </p>
 
 {% else %}
-    <p>Общий объём выпуска готовой продукции: неизвестно</p>
-
-{% if production_data["bad"] %}
-    <p>Процент брака: {{production_data["bad"]}} деталей </p>
-
-{% else %}
-    <p>Процент брака: неизвестно</p>
+<p>Общий объём выпуска готовой продукции: неизвестно</p>
 {% endif %}
+{% if production_data["bad"] %}
+<p>Процент брака: {{production_data["bad"]}} деталей </p>
+{% else %}
+<p>Процент брака: неизвестно</p>
+{% endif %}
+{% if work_procent %}
+<p>Средняя загрузка оборудования: {{ work_procent }} </p>
+{% else %}
+<p>Средняя загрузка оборудования: неизвестно</p>
+{% endif %}
+<div style="width: 500px;height: 400px" id="container"></div>
+<table>
+    <tr>
+        <th>Номер ячейки</th>
+        <th>Название ячейки</th>
+        <th>Состояние ячейки</th>
+        <th>Состояние ожтдания</th>
+        <th>Количество обработанных заготовок за час</th>
+        <th>Количество обработанных заготовок за день</th>
+        <th>Загрузка за последний час</th>
+        <th>Загрузка за текущий день</th>
+    </tr>
+    <tr>
+        <td>данные</td>
+        <td>данные</td>
+    </tr>
+</table>
+
 </body>
 </html>
