@@ -12,3 +12,14 @@ td {
     font-weight: normal;
     font-family: arial;
 }
+td a {
+    text-decoration: none;
+
+}
+td p{
+    width: 100%
+}
+.title {
+    font-size: 25px;
+
+}

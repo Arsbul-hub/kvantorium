@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from pprint import pprint
 
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 import requests
 from app import app, login, db, turbo
 from flask_login import login_required, current_user, login_user, logout_user
@@ -238,6 +238,12 @@ def index():
                            wait=wait,
                            count=count,
                            cells=cells_status, r=random.randint(7, 9))
+
+
+@app.route("/Информация о ячейке")
+def cell_info():
+    cell_index = request.args.get("cell")
+    return render_template("Информация о ячейке.html")
 
 
 @app.route("/logout")
