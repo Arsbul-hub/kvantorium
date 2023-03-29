@@ -99,7 +99,6 @@ def index():
                 count += 1
     production_data = {
         "speed": None,
-
         "all_speed": None,
         "bad": None,
     }
@@ -123,24 +122,37 @@ def index():
         "cell": 6
     }
     query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=params).json()
+    print(query)
     if query["data"]:
         production_data["all_speed"] = 0
         for i in query["data"]:
             production_data["all_speed"] += i["value"]
-    # Объём брака
+    # Процент брака
+
     params = {
         "from": int(time.time()) - 60 * 60 * datetime.now().hour,
         "param": "count",
         "cell": 2
     }
     query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=params).json()
+    all_input_query = requests.get("http://roboprom.kvantorium33.ru/api/current", params={"cell": 1}).json()["data"][0][
+        "params"]
+    all_input = 1
+    for p in all_input_query:
+        if p["param"] == "count":
+            all_input = p["value"]
 
     if query["data"]:
         production_data["bad"] = 0
         bad = 0
-        for i in query["data"]:
-            bad += i["value"]
-        production_data["bad"] = bad / production_data["all_speed"] * 100
+        for i in range(len(query["data"])):
+            if i < len(query["data"]) - 1 and query["data"][i + 1] == 0:
+                bad = query["data"][i]["value"]
+
+            else:
+                bad = query["data"][i]["value"]
+
+        production_data["bad"] = int(round(bad / all_input, 2) * 100)
     # Граффик
     graph = []
     for hour in range(24):
@@ -190,6 +202,7 @@ def index():
                 table_cell["status"] = k["status"].get(param["value"])
             if param["param"] == "wait":
                 table_cell["wait"] = k["wait"].get(param["value"])
+
         ## количество обработанных заготовок за последний час ##
 
         params = {
@@ -199,8 +212,13 @@ def index():
         }
         query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=params).json()
 
-        for param in query["data"]:
-            table_cell["speed_hour"] += param["value"]
+        for i in range(len(query["data"])):
+            if i < len(query["data"]) - 1 and query["data"][i + 1] == 0:
+                table_cell["speed_hour"] = query["data"][i]["value"]
+
+            else:
+                table_cell["speed_hour"] = query["data"][i]["value"]
+
         ## количество обработанных заготовок за текущий день ##
 
         params = {
@@ -210,21 +228,34 @@ def index():
         }
         query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=params).json()
 
-        for param in query["data"]:
-            table_cell["speed_day"] += param["value"]
+        for i in range(len(query["data"])):
+            if i < len(query["data"]) - 1 and query["data"][i + 1] == 0:
+                table_cell["speed_day"] += query["data"][i]["value"]
+
+            else:
+                table_cell["speed_day"] = query["data"][i]["value"]
 
         ## загрузка оборудования за последний час ##
         params = {
+            "timestamp": int(time.time()) - 60 * 60,
             "cell": cells["cell"],
+            "param": "status"
         }
-        query = requests.get("http://roboprom.kvantorium33.ru/api/current", params=params).json()
+        query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=params).json()
 
-        for c in query["data"]:
-            for param in c["params"]:
-                if param["param"] == "status" and param["value"] == 1:
-                    w = int(time.time()) - param["timestamp"]
-                    table_cell["work_hour"] = (w / (60 * 60)) * 100
-                    table_cell["work_day"] = (w / (60 * 60 * 24)) * 100
+        for i in range(len(query["data"])):
+            param = query["data"][i]
+
+            if param["param"] == "status" and param["value"] == 1 and i < len(query["data"]) - 1 and \
+                    query["data"][i + 1]["value"] == 0:
+                print(int(time.time()) - param["ts"])
+                table_cell["work_hour"] = int(time.time()) - int(
+                    round((int(time.time()) - param["ts"]) / 3600, 2) * 100)
+
+            else:
+                print(param)
+                table_cell["work_hour"] = int(time.time()) - int(
+                    round((int(time.time()) - param["ts"]) / 3600, 2) * 100)
         table_data.append(table_cell)
 
     return render_template("index.html",
