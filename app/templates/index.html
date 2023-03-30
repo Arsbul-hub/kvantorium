@@ -5,8 +5,8 @@
     {{ turbo() }}
     <title>Главная</title>
     <script src="https://cdn.anychart.com/js/latest/anychart-bundle.min.js"></script>
-    <link type="text/css" rel="stylesheet", href="static/css/table.css">
-    <link type="text/css" rel="stylesheet", href="static/css/base.css">
+    <link type="text/css" rel="stylesheet" , href="static/css/table.css">
+    <link type="text/css" rel="stylesheet" , href="static/css/base.css">
     <script>
 anychart.onDocumentLoad(function() {
 
@@ -18,26 +18,25 @@ anychart.onDocumentLoad(function() {
   chart.title("Граффик объёма выпуска продукции за день");
   chart.container("container").draw();
 });
-
     </script>
 </head>
 <body>
 <ul>
     <li>
-        <span>Работает ячеек {{status['work'][0]}}</span>
+        <span>Работает ячеек {{production_data["status"]['work'][0]}}</span>
     </li>
     <li>
-        <span>Выключено ячеек {{status['off'][0]}}</span>
+        <span>Выключено ячеек {{production_data["status"]['off'][0]}}</span>
     </li>
     <li>
-        <span>Ячеек в состоянии ошибки {{status['error'][0]}}</span>
+        <span>Ячеек в состоянии ошибки {{production_data["status"]['error'][0]}}</span>
     </li>
     <li>
-        <span>Ячеек в состоянии ожидания {{status['wait'][0]}}</span>
+        <span>Ячеек в состоянии ожидания {{production_data["status"]['wait'][0]}}</span>
     </li>
 </ul>
 {% if production_data["speed"] %}
-<p>Скорость изготовления: {{speed}} деталей в час</p>
+<p>Скорость изготовления: {{production_data["speed"]}} деталей в час</p>
 
 {% else %}
 <p>Скорость изготовления: неизвестно</p>
@@ -45,22 +44,23 @@ anychart.onDocumentLoad(function() {
 
 
 {% if production_data["all_speed"] %}
-<p>Общий объём выпуска готовой продукции: {{all_speed}} деталей </p>
+<p>Общий объём выпуска готовой продукции: {{production_data["all_speed"]}} деталей </p>
 
 {% else %}
 <p>Общий объём выпуска готовой продукции: неизвестно</p>
 {% endif %}
 {% if production_data["bad"] %}
-<p>Процент брака: {{production_data["bad"]}} деталей </p>
+<p>Процент брака: {{production_data["bad"]}}% деталей за день </p>
 {% else %}
 <p>Процент брака: неизвестно</p>
 {% endif %}
-{% if work_procent %}
-<p>Средняя загрузка оборудования: {{ work_procent }} </p>
+{% if production_data["work_procent"] %}
+<p>Средняя загрузка оборудования: {{ production_data["work_procent"] }}% </p>
 {% else %}
 <p>Средняя загрузка оборудования: неизвестно</p>
 {% endif %}
 <div style="width: 500px;height: 400px" id="container"></div>
+<span class="title">Информация о ячейках</span>
 <table>
     <tr>
         <th>Номер ячейки</th>
@@ -73,17 +73,52 @@ anychart.onDocumentLoad(function() {
         <th>Загрузка за текущий день</th>
     </tr>
     {% for cell in table_data %}
+
     <tr>
-        <td>{{cell["index"]}}</td>
-        <td>{{cells_names[cell["index"]]}}</td>
-        <td>{{cell["status"]}}</td>
-        <td>{{cell["wait"]}}</td>
-        <td>{{cell["speed_hour"]}}</td>
-        <td>{{cell["speed_day"]}}</td>
-        <td>{{cell["work_hour"]}}</td>
-        <td>{{cell["work_day"]}}</td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["index"]}}</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cells_names[cell["index"]]}}</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["status"]}}</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["wait"]}}</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["speed_hour"]}} деталей</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["speed_day"]}} деталей</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["work_hour"]}}%</p>
+            </a>
+        </td>
+        <td>
+            <a href="{{url_for('cell_info', cell=cell['index'])}}">
+                <p>{{cell["work_day"]}}%</p>
+            </a>
+        </td>
+
 
     </tr>
+
     {% endfor %}
 </table>
 
