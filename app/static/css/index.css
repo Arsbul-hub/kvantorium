@@ -1,0 +1,40 @@
+.main {
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px darkgray;
+    margin: 10px;
+    padding: 10px;
+}
+.main-info {
+    margin: 40px;
+    border: none;
+}
+.main-info th {
+
+    padding: 5px 10px;
+    border: none;
+}
+.main-info .title th {
+    font-size: large;
+}
+.main-info .value th {
+    font-size: xx-large;
+}
+
+/* table */
+.data {
+    border: 1px solid red;
+    margin: 30px;
+}
+.data tr {
+    margin-top: 10px;
+    border: 1px solid gray
+}
+.data th {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px double black
+}
+.data td {
+    padding: 5px 10px;
+    border: 1px solid black
+}

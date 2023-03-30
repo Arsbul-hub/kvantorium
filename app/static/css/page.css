@@ -1,0 +1,41 @@
+.title {
+    font-size: xx-large;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 300px;
+}
+span {
+    font-family: arial;
+}
+p, span, a {
+    font-family: arial;
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+th {
+    font-family: arial;
+    font-weight: normal;
+}
+td {
+    font-weight: normal;
+    font-family: arial;
+}
+td a {
+    text-decoration: none;
+
+}
+td p{
+    width: 100%
+}
+.title {
+    font-size: 25px;
+
+}

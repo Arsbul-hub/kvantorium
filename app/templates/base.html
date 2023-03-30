@@ -1,0 +1,65 @@
+<!-- Vigbo-cms //static-cdn4.vigbo.tech/u19745/26206/ bruno2 -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <meta charset="utf-8">
+
+    <!--"/static/css/build_cms_front.css"-->
+    <link rel="stylesheet" type="text/css"
+          href="static/css/build_cms_front.css">
+
+
+
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css">
+    <script src="/static/js/jquery.js"></script>
+
+    <link rel="icon" href="/static/images/icon.ico">
+    <script src="https://kit.fontawesome.com/6957c188ce.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.anychart.com/js/latest/anychart-bundle.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="static/css/page.css">
+    <link type="text/css" rel="stylesheet" href="static/css/index.css">
+    {% block head %}{% endblock %}
+</head>
+<body data-template="bruno2"
+      class="f__preset-box f__site f__2 loading locale_ru bruno2 mod--search-disable mod--img-logo mod--header-static mod--menu-action-on-scroll mod--menu-static-on-scroll desktop adaptive-desktop mod--horizontal-menu mod--infoline-disable js--loading-cascade mod--font-none-preset layout-logo-left--by-logo "
+      data-preview="">
+<div class="l-wrap js-wrap">
+
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+
+    <div class="nav-menu">
+
+        <div class="nav-menu-item">
+            <nav>
+                <ul class="topmenu">
+
+                    <li><a href="{{url_for('index')}}">ГЛАВНАЯ</a>
+                    <li><a href="{{url_for('monitor')}}">ОНЛАЙН МОНИТОР</a>
+
+                </ul>
+            </nav>
+
+
+        </div>
+
+    </div>
+
+    {% block content %}{% endblock %}
+</div>
+<script src="/static/js/site.js"></script>
+
+
+</body>
+</html><!-- cached 2022-11-24 10:12:41 e24cc38881bdebf1e12f84cc0a6bf3ce -->

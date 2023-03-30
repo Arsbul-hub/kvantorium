@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+{% extends 'base.html' %}
 <head>
+    {% block head %}
     <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="/static/css/monitor.css">
+    <link type="text/css" rel="stylesheet" href="static/css/page.css">
+    <script src="https://kit.fontawesome.com/6957c188ce.js" crossorigin="anonymous"></script>
     <title>Title</title>
+    {% endblock %}
 </head>
 <body>
+{% block content %}
+<span class="title">Онлайн монитор</span>
+<div class="container">
+
+    {% for cell in cells %}
+    <a href="{{url_for('cell_info', index=cell['cell'])}}">
+        <div class="cell" style='background-color: {{colors[cell["status"]]}}'>
+            <span class="title">{{cell["cell"]}} ячейка</span>
+            <p> Количество заготовок за текущий день: {{cell["count_d"]}}</p>
+            <p> Количество заготовок за текущий час: {{cell["count_h"]}}</p>
+            <p> Загрузка текущий день: {{int(round(cell["load_d"][1], 2) * 100)}}%</p>
+            <p> Загрузка за текущий час: {{int(round(cell["load_h"][1], 2) * 100)}}%</p>
+        </div>
+    </a>
+    {% if cells.index(cell) != 5 %}
+    <i class="fa fa-long-arrow-right"></i>
+    {% endif %}
+    {% endfor %}
+    {% endblock %}
+</div>
 
 </body>
 </html>

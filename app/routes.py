@@ -5,7 +5,7 @@ from pprint import pprint
 
 from flask import render_template, redirect, request
 import requests
-from app import app, login, db, turbo
+from app import app, login, db, turbo, cells_names, states_names
 from flask_login import login_required, current_user, login_user, logout_user
 
 from app.forms import LoginForm
@@ -24,14 +24,7 @@ def load_user(user_id):
 @login_required
 def index():
     cells = requests.get("http://roboprom.kvantorium33.ru/api/current").json()["data"]
-    cells_names = {
-        1: "Выкладка фишек",
-        2: "Сортировка",
-        3: "Маркировка",
-        4: "Выкладка оснований",
-        5: "Раскладка",
-        6: "Упаковка"
-    }
+
     production_data = {
         "speed": None,
         "all_speed": None,
@@ -105,7 +98,6 @@ def index():
 
     # Процент брака
     if cells[5]["count_d"]:
-
         production_data["bad"] = int(round(cells[1]["count_d"] / cells[0]["count_d"], 2) * 100)
 
     # Средняя загрузка
@@ -117,12 +109,14 @@ def index():
 
     # таблица
     graph = []
-    for hour in range(24):
+    for hour in range(datetime.now().hour):
         p = {
-            "timestamp": int(int(time.time()) - datetime.now().hour * 3600) + hour,
+            "from": int(int(time.time()) - datetime.now().hour * 3600) + hour * 3600,
+            "to": int(int(time.time()) - datetime.now().hour * 3600) + hour * 2 * 3600,
             "cell": 6,
             "param": "count"
         }
+
         query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=p).json()["data"]
         a = 0
         for i in range(len(query)):
@@ -131,35 +125,22 @@ def index():
                 a += d["value"]
             elif i == len(query) - 1:
                 a += d["value"]
+
         graph.append(a)
 
-    k = {
-        "wait": {
-            0: "Нет ожидания",
-            1: "Ожидание заготовок на входе",
-            2: "Линия переполнена или ожидание готовности следующей ячейки"
-        },
-        "status": {
-            0: "Выключена",
-            1: "Работает",
-            2: "Ожидание",
-            3: "Ошибка"
-        }
-
-    }
     table_data = []
     for c in cells:
         table_cell = {"index": c["cell"],
-                      "status": k["status"][c["status"]],
-                      "wait": k["wait"][c["wait"]],
+                      "status": states_names["status"][c["status"]],
+                      "wait": states_names["wait"][c["wait"]],
                       "speed_hour": c["count_h"],
                       "speed_day": c["count_d"],
                       "work_hour": round(c["load_h"][1] * 100, 2),
                       "work_day": round(c["load_d"][1] * 100, 2)}
         table_data.append(table_cell)
 
-
     return render_template("index.html",
+                           len=len,
                            cells_names=cells_names,
                            graph=graph,
                            table_data=table_data,
@@ -171,8 +152,71 @@ def index():
 
 @app.route("/Информация о ячейке")
 def cell_info():
-    cell_index = request.args.get("cell")
-    return render_template("Информация о ячейке.html")
+    # за текущий день
+    cell_index = request.args.get("index")
+    cell = requests.get("http://roboprom.kvantorium33.ru/api/current", params={"cell": cell_index}).json()["data"][0]
+
+    cell_data = {
+        "index": cell_index,
+        "name": cells_names[int(cell_index)],
+        "speed_hour": cell["count_h"],
+        "speed_day": cell["count_d"],
+        "work_hour": round(cell["load_h"][1] * 100, 2),
+        "work_day": round(cell["load_d"][1] * 100, 2),
+        "wait": cell["wait_d"],
+        "states": cell["status_d"]
+    }
+
+    graph = []
+    for hour in range(datetime.now().hour):
+        p = {
+            "from": int(int(time.time()) - datetime.now().hour * 3600) + hour * 3600,
+            "to": int(int(time.time()) - datetime.now().hour * 3600) + hour * 2 * 3600,
+            "cell": cell_index,
+            "param": "status"
+        }
+
+        query = requests.get("http://roboprom.kvantorium33.ru/api/history", params=p).json()["data"]
+        a = 0
+        for i in query:
+            a += i["value"]
+        if query:
+            graph.append(round(a / len(query)))
+        else:
+            graph.append(a)
+    table_data1 = []
+    for s in range(4):
+        table_data1.append(
+            {"status": states_names["status"][s],
+             "time_day": cell["status_d"][s],
+             "time_day_procent": int(round(cell["status_d"][s] / (3600 * 24), 2) * 100),
+             "time_hour": cell["status_h"][s],
+             "time_hour_procent": int(round(cell["status_h"][s] / 3600, 2) * 100),
+             }
+        )
+    table_data2 = []
+    for s in range(3):
+        table_data2.append(
+            {"wait": states_names["wait"][s],
+             "time_day": cell["wait_d"][s],
+             "time_day_procent": int(round(cell["wait_d"][s] / (3600 * 24), 2) * 100),
+             "time_hour": cell["wait_h"][s],
+             "time_hour_procent": int(round(cell["wait_h"][s] / 3600, 2) * 100),
+             }
+        )
+    return render_template("Информация о ячейке.html", len=len, cell=cell_data, graph=graph, table_data1=table_data1, table_data2=table_data2)
+
+
+@app.route("/Онлайн монитор")
+def monitor():
+    cells = requests.get("http://roboprom.kvantorium33.ru/api/current").json()["data"]
+    colors = [
+        "lightgray",
+        "lightgreen",
+        "lightyellow",
+        "lightred"
+    ]
+    return render_template("Онлайн монитор.html", cells=cells, colors=colors, round=round, int=int)
 
 
 @app.route("/logout")

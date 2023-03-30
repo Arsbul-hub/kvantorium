@@ -1,5 +1,6 @@
 table {
-    border: 1px solid red
+    border: 1px solid red;
+    margin: 30px;
 }
 tr {
     margin-top: 10px;

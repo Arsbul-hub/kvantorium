@@ -1,15 +1,217 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+{% extends 'base.html' %}
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Информация о ячейке "Выкладка фишек"</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link href="/static/css/table.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/info.css"/>
+    <script src="https://cdn.anychart.com/js/latest/anychart-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/page.css">
+    <script>
+      anychart.onDocumentLoad(function() {
+      var chart = anychart.line([
+      {% for n in range(len(graph)) %}
+        {x: {{n}}, value: {{graph[n]}}},
+      {% endfor %}
+
+
+      ]);
+      chart.title("Изменения состояния ячейки за текущий день");
+      chart.container("container").draw();
+    });
+
+
+    </script>
+
+    {% endblock %}
 </head>
 <body>
-<div id="place">
-    <div style="n"></div>
-    <div style="n"></div>
-    <div style="n"></div>
-    <div style="n"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js"
+        integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i"
+        crossorigin="anonymous"></script>
+{% block content %}
+
+<div class="content">
+    <div class="header">
+        <h1>{{ cell["index"] }} ячейка "{{ cell["name"] }}"</h1>
+    </div>
+    <div class="d-flex">
+        <div class="p-2 flex-fill">
+            <div class="object_content">
+                <div class="object_text">
+                    Средняя загрузка ячейки за текущий день: {{cell["work_day"]}}%
+                </div>
+
+            </div>
+        </div>
+        <div class="p-2 flex-fill">
+            <div class="object_content">
+                <div class="object_text">
+                    Средняя загрузка ячейки за последний час: {{cell["work_hour"]}}%
+                </div>
+
+            </div>
+        </div>
+        <div class="p-2 flex-fill">
+            <div class="object_content">
+                <div class="object_text">
+                    Количество обработанных заготовок за текущий день: {{cell["speed_day"]}}
+                </div>
+
+            </div>
+        </div>
+        <div class="p-2 flex-fill">
+            <div class="object_content">
+                <div class="object_text">
+                    Количество обработанных заготовок за последний час: {{cell["speed_hour"]}}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div style="width: 500px;height: 400px" id="container"></div>
+
+        <div style="width:500px" class="p-2">
+            <canvas id="myChart" width="400" height="400">
+                <script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Выключена', 'Работает', 'Ожидание', 'Ошибка'],
+        datasets: [{
+            data: {{cell["states"]}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(160, 10, 230, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Статистика состояний за текущий день'
+        }
+    }
+});
+
+
+
+
+
+
+                </script>
+            </canvas>
+        </div>
+        <table>
+            <tr>
+                <th>Состояние</th>
+                <th>Время нахождения в этом состоянии за текущий день</th>
+                <th>Процент времени нахождения в этом состоянии за текущий день</th>
+                <th>Время нахождения в этом состоянии за последний час</th>
+                <th>Процент времени нахождения в этом состоянии за последний час</th>
+
+            </tr>
+            {% for cell in table_data1 %}
+            <tr>
+                <td><p>{{cell["status"]}}</p></td>
+                <td><p>{{cell["time_day"]}} секунд</p></td>
+                <td><p>{{cell["time_day_procent"]}}%</p></td>
+                <td><p>{{cell["time_hour"]}} секунд </p></td>
+                <td><p>{{cell["time_hour_procent"]}}%</p></td>
+
+            </tr>
+            {% endfor %}
+        </table>
+        <table>
+            <tr>
+                <th>Состояние</th>
+                <th>Время нахождения в этом состоянии за текущий день</th>
+                <th>Процент времени нахождения в этом состоянии за текущий день</th>
+                <th>Время нахождения в этом состоянии за последний час</th>
+                <th>Процент времени нахождения в этом состоянии за последний час</th>
+
+            </tr>
+            {% for cell in table_data2 %}
+            <tr>
+                <td><p>{{cell["wait"]}}</p></td>
+                <td><p>{{cell["time_day"]}} секунд</p></td>
+                <td><p>{{cell["time_day_procent"]}}%</p></td>
+                <td><p>{{cell["time_hour"]}} секунд </p></td>
+                <td><p>{{cell["time_hour_procent"]}}%</p></td>
+
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div style="width:500px" class="p-2">
+            <canvas id="myChart2" width="400" height="400">
+                <script>
+var ctx = document.getElementById('myChart2').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Нет ожидания', 'Ожидание заготовок на входе', 'Линия переполнена или ожидание готовности следующей ячейки'],
+        datasets: [{
+            data: {{cell["wait"]}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(160, 10, 230, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Статистика состояний за текущий день'
+        }
+    }
+});
+
+
+
+
+
+
+                </script>
+            </canvas>
+        </div>
+
+
+{% endblock %}
 </div>
+
+
 </body>
 </html>
