@@ -30,6 +30,8 @@
 
 
 
+
+
     </script>
 
     {% endblock %}
@@ -145,6 +147,16 @@ var myChart = new Chart(ctx, {
                 <th>Процент времени нахождения в этом состоянии за текущий день</th>
                 <th>Время нахождения в этом состоянии за последний час</th>
                 <th>Процент времени нахождения в этом состоянии за последний час</th>
+            </tr>
+        </table>
+    <span class="title">Статистика по состояниям</span>
+    <table>
+        <tr>
+            <th>Состояние</th>
+            <th>Время нахождения в этом состоянии за текущий день</th>
+            <th>Процент времени нахождения в этом состоянии за текущий день</th>
+            <th>Время нахождения в этом состоянии за последний час</th>
+            <th>Процент времени нахождения в этом состоянии за последний час</th>
 
         </tr>
         {% for cell in table_data1 %}
@@ -158,6 +170,7 @@ var myChart = new Chart(ctx, {
         </tr>
         {% endfor %}
     </table>
+    <span class="title">Время ожидания</span>
     <table>
         <tr>
             <th>Состояние</th>
@@ -177,6 +190,36 @@ var myChart = new Chart(ctx, {
 
         </tr>
         {% endfor %}
+    </table>
+    <span class="title">Причины простоя</span>
+    <table>
+        <tr>
+            <th>Причина простоя</th>
+            <th>Суммарное время простоя за текущий день</th>
+            <th>Процент времени простоя за текущий день</th>
+
+
+        </tr>
+        {% if table_data3 %}
+        {% for cell in table_data3 %}
+        <tr>
+
+            <td><p>{{cell["cause"]}}</p></td>
+            <td><p>{{cell["time_sum"]}} секунд</p></td>
+            <td><p>{{cell["time_procent"]}}% </p></td>
+
+
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td><p>Данные отсутствуют</p></td>
+            <td><p>Данные отсутствуют</p></td>
+            <td><p>Данные отсутствуют</p></td>
+
+
+        </tr>
+        {% endif %}
     </table>
     <div style="width:500px" class="p-2">
         <canvas id="myChart2" width="400" height="400">
@@ -218,14 +261,15 @@ var myChart = new Chart(ctx, {
 
 
 
+
+
             </script>
         </canvas>
     </div>
 
 
-    {% endblock %}
 </div>
-
+{% endblock %}
 
 </body>
 </html>

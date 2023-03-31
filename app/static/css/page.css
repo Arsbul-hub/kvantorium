@@ -46,3 +46,8 @@ td p{
 div.anychart-credits {
     visibility: hidden
 }
+.subtitle {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
