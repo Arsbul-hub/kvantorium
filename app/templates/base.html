@@ -24,12 +24,7 @@
 
     <link type="text/css" rel="stylesheet" href="static/css/page.css">
     <link type="text/css" rel="stylesheet" href="static/css/index.css">
-    <script>
-        setTimeout(function(){
-	location.reload();
-}, 5000);
 
-    </script>
     {% block head %}{% endblock %}
 </head>
 <body data-template="bruno2"
@@ -58,31 +53,24 @@
     {% endwith %}
 
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top"
-         style="background-color: #bdbdf2!important;">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse justify-content-center"
-                 id="navbarSupportedContent">
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{url_for('index')}}"
-                           style="color:black;">ГЛАВНАЯ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{url_for('monitor')}}"
-                           style="color:black;">ОНЛАЙН МОНИТОР</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{url_for('op_panel')}}"
-                           style="color:black;">ПАНЕЛЬ ОПЕРАТОРА</a>
-                    </li>
+    <div class="nav-menu">
+
+        <div class="nav-menu-item">
+            <nav>
+                <ul class="topmenu">
+
+                    <li><a href="{{url_for('index')}}">ГЛАВНАЯ</a>
+                    <li><a href="{{url_for('monitor')}}">ОНЛАЙН МОНИТОР</a>
+                    <li><a href="{{url_for('op_panel')}}">ПАНЕЛЬ ОПЕРАТОРА</a>
+
+
                 </ul>
-            </div>
+            </nav>
+
+
         </div>
-    </nav>
-    <br>
-    <br>
-    <br>
+
+    </div>
 
     {% block content %}{% endblock %}
 </div>

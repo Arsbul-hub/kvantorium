@@ -100,14 +100,14 @@ anychart.onDocumentLoad(function() {
             </tr>
             {% for cell in table_data %}
             <tr>
-                <td><p>{{cell["index"]}}</p></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["index"]}}</p></a></td>
                 <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cells_names[cell["index"]]}}</p></a></td>
-                <td><p>{{cell["status"]}}</p></td>
-                <td><p>{{cell["wait"]}}</p></td>
-                <td><p>{{cell["speed_hour"]}} деталей</p></td>
-                <td><p>{{cell["speed_day"]}} деталей</p></td>
-                <td><p>{{cell["work_hour"]}}%</p></td>
-                <td><p>{{cell["work_day"]}}%</p></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["status"]}}</p></a></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["wait"]}}</p></a></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["speed_hour"]}} деталей</p></a></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["speed_day"]}} деталей</p></a></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["work_hour"]}}%</p></a></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cell["work_day"]}}%</p></a></td>
             </tr>
             {% endfor %}
         </table>
