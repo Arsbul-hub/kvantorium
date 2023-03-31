@@ -149,7 +149,8 @@ def index():
                            work_procent=0,
                            production_data=production_data,
                            count=count,
-                           cells=cells, r=random.randint(7, 9))
+                           cells=cells, r=random.randint(7, 9),
+                           brak=requests.get('http://roboprom.kvantorium33.ru/api/current').json()['data'][1]['count_d'])
 
 
 @app.route("/Информация о ячейке")
