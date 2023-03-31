@@ -5,13 +5,15 @@ from pprint import pprint
 
 from flask import render_template, redirect, request
 import requests
-from app import app, login, db, turbo, cells_names, states_names
+from flask import render_template, redirect, request
 from flask_login import login_required, current_user, login_user, logout_user
 
+from app import app, login, cells_names, states_names, db
 from app.forms import LoginForm
 from app.models import User, CellsCause
 from turbo_flask import Turbo
 import threading
+from app.models import User, CellsCause
 
 
 @login.user_loader
@@ -204,7 +206,17 @@ def cell_info():
              "time_hour_procent": int(round(cell["wait_h"][s] / 3600, 2) * 100),
              }
         )
-    return render_template("Информация о ячейке.html", len=len, cell=cell_data, graph=graph, table_data1=table_data1, table_data2=table_data2)
+    table_data3 = []
+    for s in CellsCause.query.all():
+        table_data3.append(
+            {"cell": s.cell,
+             "cause": s.cause,
+             "time_sum": cell["wait_d"][s],
+             "time_procent": s.timestamp,
+             }
+        )
+    return render_template("Информация о ячейке.html", len=len, cell=cell_data, graph=graph, table_data1=table_data1,
+                           table_data2=table_data2)
 
 
 @app.route("/Онлайн монитор")

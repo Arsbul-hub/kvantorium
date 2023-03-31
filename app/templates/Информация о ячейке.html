@@ -28,6 +28,8 @@
     });
 
 
+
+
     </script>
 
     {% endblock %}
@@ -144,42 +146,51 @@ var myChart = new Chart(ctx, {
                 <th>Время нахождения в этом состоянии за последний час</th>
                 <th>Процент времени нахождения в этом состоянии за последний час</th>
 
-            </tr>
-            {% for cell in table_data1 %}
-            <tr>
-                <td><p>{{cell["status"]}}</p></td>
-                <td><p>{{cell["time_day"]}} секунд</p></td>
-                <td><p>{{cell["time_day_procent"]}}%</p></td>
-                <td><p>{{cell["time_hour"]}} секунд </p></td>
-                <td><p>{{cell["time_hour_procent"]}}%</p></td>
+        </tr>
+        {% for cell in table_data1 %}
+        <tr>
+            <td><p>{{cell["status"]}}</p></td>
+            <td><p>{{cell["time_day"]}} секунд</p></td>
+            <td><p>{{cell["time_day_procent"]}}%</p></td>
+            <td><p>{{cell["time_hour"]}} секунд </p></td>
+            <td><p>{{cell["time_hour_procent"]}}%</p></td>
 
-            </tr>
-            {% endfor %}
-        </table>
-        <table>
-            <tr>
-                <th>Состояние</th>
-                <th>Время нахождения в этом состоянии за текущий день</th>
-                <th>Процент времени нахождения в этом состоянии за текущий день</th>
-                <th>Время нахождения в этом состоянии за последний час</th>
-                <th>Процент времени нахождения в этом состоянии за последний час</th>
+        </tr>
+        {% endfor %}
+    </table>
+    <table>
+        <tr>
+            <th>Состояние</th>
+            <th>Время нахождения в этом состоянии за текущий день</th>
+            <th>Процент времени нахождения в этом состоянии за текущий день</th>
+            <th>Время нахождения в этом состоянии за последний час</th>
+            <th>Процент времени нахождения в этом состоянии за последний час</th>
 
-            </tr>
-            {% for cell in table_data2 %}
-            <tr>
-                <td><p>{{cell["wait"]}}</p></td>
-                <td><p>{{cell["time_day"]}} секунд</p></td>
-                <td><p>{{cell["time_day_procent"]}}%</p></td>
-                <td><p>{{cell["time_hour"]}} секунд </p></td>
-                <td><p>{{cell["time_hour_procent"]}}%</p></td>
+        </tr>
+        {% for cell in table_data2 %}
+        <tr>
+            <td><p>{{cell["wait"]}}</p></td>
+            <td><p>{{cell["time_day"]}} секунд</p></td>
+            <td><p>{{cell["time_day_procent"]}}%</p></td>
+            <td><p>{{cell["time_hour"]}} секунд </p></td>
+            <td><p>{{cell["time_hour_procent"]}}%</p></td>
 
-            </tr>
-            {% endfor %}
-        </table>
+        </tr>
+        {% endfor %}
+    </table>
+    <table>
+        <tr>
+            <th>Причина простоя</th>
+            <th>Суммарное время простоя за текущий день</th>
+            <th>Процент времени простоя за текущий день</th>
 
-        <div style="width:500px" class="p-2">
-            <canvas id="myChart2" width="400" height="400">
-                <script>
+
+        </tr>
+
+    </table>
+    <div style="width:500px" class="p-2">
+        <canvas id="myChart2" width="400" height="400">
+            <script>
 var ctx = document.getElementById('myChart2').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'pie',
@@ -215,12 +226,14 @@ var myChart = new Chart(ctx, {
 
 
 
-                </script>
-            </canvas>
-        </div>
 
 
-{% endblock %}
+            </script>
+        </canvas>
+    </div>
+
+
+    {% endblock %}
 </div>
 
 
