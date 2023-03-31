@@ -30,6 +30,8 @@
 
 
 
+
+
     </script>
 
     {% endblock %}
@@ -126,9 +128,12 @@ var myChart = new Chart(ctx, {
 
 
 
+
+
             </script>
         </canvas>
     </div>
+    <span class="title">Статистика по состояниям</span>
     <table>
         <tr>
             <th>Состояние</th>
@@ -149,6 +154,7 @@ var myChart = new Chart(ctx, {
         </tr>
         {% endfor %}
     </table>
+    <span class="title">Время ожидания</span>
     <table>
         <tr>
             <th>Состояние</th>
@@ -169,6 +175,7 @@ var myChart = new Chart(ctx, {
         </tr>
         {% endfor %}
     </table>
+    <span class="title">Причины простоя</span>
     <table>
         <tr>
             <th>Причина простоя</th>
@@ -177,7 +184,26 @@ var myChart = new Chart(ctx, {
 
 
         </tr>
+        {% if table_data3 %}
+        {% for cell in table_data3 %}
+        <tr>
 
+            <td><p>{{cell["cause"]}}</p></td>
+            <td><p>{{cell["time_sum"]}} секунд</p></td>
+            <td><p>{{cell["time_procent"]}}% </p></td>
+
+
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td><p>Данные отсутствуют</p></td>
+            <td><p>Данные отсутствуют</p></td>
+            <td><p>Данные отсутствуют</p></td>
+
+
+        </tr>
+        {% endif %}
     </table>
     <div style="width:500px" class="p-2">
         <canvas id="myChart2" width="400" height="400">
@@ -219,14 +245,15 @@ var myChart = new Chart(ctx, {
 
 
 
+
+
             </script>
         </canvas>
     </div>
 
 
-    {% endblock %}
 </div>
-
+{% endblock %}
 
 </body>
 </html>

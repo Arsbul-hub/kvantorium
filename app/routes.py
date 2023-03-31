@@ -206,12 +206,12 @@ def cell_info():
         table_data3.append(
             {"cell": s.cell,
              "cause": s.cause,
-             "time_sum": cell["wait_d"][s],
-             "time_procent": s.timestamp,
+             "time_sum": cell["status_d"][0],
+             "time_procent": int(round(cell["status_d"][0] / 3600, 2) * 100),
              }
         )
     return render_template("Информация о ячейке.html", len=len, cell=cell_data, graph=graph, table_data1=table_data1,
-                           table_data2=table_data2)
+                           table_data2=table_data2, table_data3=table_data3)
 
 
 @app.route("/Онлайн монитор")
