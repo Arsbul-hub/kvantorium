@@ -9,7 +9,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(), index=True, unique=True)
     password_hash = db.Column(db.String(128))
 
-
     def __repr__(self):
         return 'Пользователь {}'.format(self.username)
 
@@ -18,3 +17,9 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class CellsCause(UserMixin, db.Model):
+    cell = db.Column(db.Integer, primary_key=True)
+    cause = db.Column(db.String())
+    timestamp = db.Column(db.Integer)

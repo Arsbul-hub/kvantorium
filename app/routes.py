@@ -9,7 +9,7 @@ from app import app, login, db, turbo, cells_names, states_names
 from flask_login import login_required, current_user, login_user, logout_user
 
 from app.forms import LoginForm
-from app.models import User
+from app.models import User, CellsCause
 from turbo_flask import Turbo
 import threading
 
@@ -321,3 +321,26 @@ def login():
         else:
             return render_template("login.html", form=form)
     return render_template("login.html", form=form)
+@app.route("/Панель оператора", methods=["GET", "POST"])
+def op_panel():
+    cells = requests.get("http://roboprom.kvantorium33.ru/api/current")
+    if cells.status_code == 504:
+        return render_template("errors/502.html")
+
+    colors = [
+        "lightgray",
+        "lightgreen",
+        "lightyellow",
+        "lightred"
+    ]
+    cause = request.args.get("cause")
+    if cause:
+        new_cell_cause = CellsCause(cell=request.args.get("cell"), cause=cause)
+        db.session.add(new_cell_cause)
+        db.session.commit()
+    for cell in cells.json()["data"]:
+        if cell["status"] != 0:
+            CellsCause.query.filter_by(cell=cell["cell"]).delete()
+            db.session.commit()
+    return render_template("Панель оператора.html", cell=request.args.get("cell"), states_names=states_names,
+                           cells=cells.json()["data"], cells_names=cells_names, colors=colors, round=round, int=int)
