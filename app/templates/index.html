@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     {{ turbo() }}
     <title>Главная</title>
+    <link type="text/css" rel="stylesheet" href="static/css/table.css">
 
 
     {% endblock %}
@@ -31,19 +32,19 @@ anychart.onDocumentLoad(function() {
 
 </script>
 <div class="content">
-    <span class="title">Главная страница</span>
-    <table class="main-info">
-        <tr class="title">
-            <th>Работает ячеек</th>
-            <th>Выключено ячеек</th>
-            <th>Ячеек в состоянии ошибки</th>
-            <th>Ячеек в состоянии ожидания</th>
+    <h1 class="title">Главная страница</h1>
+    <table class="main-info stats">
+        <tr class="title stats">
+            <th class="stats">Работает ячеек</th>
+            <th class="stats">Выключено ячеек</th>
+            <th class="stats">Ячеек в состоянии ошибки</th>
+            <th class="stats">Ячеек в состоянии ожидания</th>
         </tr>
-        <tr class="value">
-            <th>{{production_data["status"]['work'][0]}}</th>
-            <th>{{production_data["status"]['off'][0]}}</th>
-            <th>{{production_data["status"]['error'][0]}}</th>
-            <th>{{production_data["status"]['wait'][0]}}</th>
+        <tr class="value stats">
+            <th class="stats">{{production_data["status"]['work'][0]}}</th>
+            <th class="stats">{{production_data["status"]['off'][0]}}</th>
+            <th class="stats">{{production_data["status"]['error'][0]}}</th>
+            <th class="stats">{{production_data["status"]['wait'][0]}}</th>
         </tr>
     </table>
 
@@ -73,6 +74,8 @@ anychart.onDocumentLoad(function() {
         <p>Средняя загрузка оборудования: неизвестно</p>
         {% endif %}
     </div>
+    <br>
+    <br>
     <div style="width: 500px;height: 400px" id="container"></div>
     <span class="title">Информация о ячейках</span>
     <a href="{{url_for('monitor')}}">
@@ -81,7 +84,7 @@ anychart.onDocumentLoad(function() {
                 <th>Номер ячейки</th>
                 <th>Название ячейки</th>
                 <th>Состояние ячейки</th>
-                <th>Состояние ожтдания</th>
+                <th>Состояние ожидания</th>
                 <th>Количество обработанных заготовок за час</th>
                 <th>Количество обработанных заготовок за день</th>
                 <th>Загрузка за последний час</th>

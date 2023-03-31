@@ -5,7 +5,7 @@
     {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Информация о ячейке "Выкладка фишек"</title>
+    <title>Информация о ячейке "{{ cell["name"] }}"</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link href="/static/css/table.css" type="text/css" rel="stylesheet">
@@ -48,11 +48,14 @@
     <div class="header">
         <h1>{{ cell["index"] }} ячейка "{{ cell["name"] }}"</h1>
     </div>
+    <br>
+    <br>
     <div class="d-flex">
         <div class="p-2 flex-fill">
             <div class="object_content">
                 <div class="object_text">
-                    Средняя загрузка ячейки за текущий день: {{cell["work_day"]}}%
+                    <div class="num">Средняя загрузка ячейки за текущий день:</div>
+                    <div class="num">{{cell["work_day"]}}%</div>
                 </div>
 
             </div>
@@ -60,7 +63,8 @@
         <div class="p-2 flex-fill">
             <div class="object_content">
                 <div class="object_text">
-                    Средняя загрузка ячейки за последний час: {{cell["work_hour"]}}%
+                    <div class="num">Средняя загрузка ячейки за последний час:</div>
+                    <div class="num">{{cell["work_hour"]}}%</div>
                 </div>
 
             </div>
@@ -68,7 +72,8 @@
         <div class="p-2 flex-fill">
             <div class="object_content">
                 <div class="object_text">
-                    Количество обработанных заготовок за текущий день: {{cell["speed_day"]}}
+                    <div class="num">Количество обработанных заготовок за текущий день:</div>
+                    <div class="num">{{cell["speed_day"]}}</div>
                 </div>
 
             </div>
@@ -76,14 +81,18 @@
         <div class="p-2 flex-fill">
             <div class="object_content">
                 <div class="object_text">
-                    Количество обработанных заготовок за последний час: {{cell["speed_hour"]}}
+                    <div class="num">Количество обработанных заготовок за последний час:</div>
+                    <div class="num">{{cell["speed_hour"]}}</div>
                 </div>
 
             </div>
         </div>
     </div>
+    <br>
+    <br>
     <div style="width: 500px;height: 400px" id="container"></div>
-
+    <br>
+    <br>
         <div style="width:500px" class="p-2">
             <canvas id="myChart" width="400" height="400">
                 <script>
@@ -125,6 +134,8 @@ var myChart = new Chart(ctx, {
                 </script>
             </canvas>
         </div>
+    <br>
+    <br>
         <table>
             <tr>
                 <th>Состояние</th>

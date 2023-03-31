@@ -16,10 +16,12 @@ body {
 i {
     font-size: 40px;
 }
-.title {
-    width: 90%;
-    font-size: 30px;
+span.title {
+    display: block;
+    width: auto;
+    font-size: 50px;
     margin: 10px;
+    text-align: center;
 }
 .container {
     display: flex;
@@ -35,9 +37,7 @@ i {
     cursor: pointer;
     text-decoration: none;
 }
-.title {
-    display: block;
+tr.title {
     margin-left: auto;
     margin-right: auto;
-    text-align: center;
 }

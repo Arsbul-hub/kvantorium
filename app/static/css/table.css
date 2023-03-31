@@ -1,17 +1,37 @@
 table {
-    border: 1px solid red;
+    border: 1px solid red!important;
     margin: 30px;
 }
 tr {
     margin-top: 10px;
-    border: 1px solid gray
+    border: 1px solid gray!important;
 }
 th {
     margin: 0 5px;
     padding: 5px 10px;
-    border: 1px double black
+    border: 1px double black!important;
+    text-align: center;
 }
 td {
     padding: 5px 10px;
-    border: 1px solid black
+    border: 1px solid black!important;
+    border-width: 1px;
 }
+table.stats {
+    border: 0!important;
+    margin: auto;
+}
+tr.stats {
+    margin-top: 10px;
+    border: 0!important;
+}
+th.stats {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 0!important;
+    text-align: center;
+}
+td.stats {
+    padding: 5px 10px;
+    border: 0!important;
+    border-width: 1px;

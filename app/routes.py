@@ -216,7 +216,89 @@ def monitor():
         "lightyellow",
         "lightred"
     ]
-    return render_template("Онлайн монитор.html", cells=cells, colors=colors, round=round, int=int)
+    production_data = {
+        "speed": None,
+        "all_speed": None,
+        "bad": None,
+        "work_procent": 0,
+        "status": {
+            "work": [0, []],
+            "wait": [0, []],
+            "error": [0, []],
+            "off": [0, []]
+        },
+        "mode": {
+            "hand": [0, []],
+            "auto": [0, []]
+        },
+        "wait": {
+            "no": [0, []],
+            "wait": [0, []],
+            "full_line": [0, []]
+        }
+    }
+    count = 0
+    for cell in cells:
+        # params = sorted(cell["params"], key=lambda a: a["timestamp"])
+        cell_id = cell["cell"]
+        for i in cell["params"]:
+            p = i["param"]
+            v = i["value"]
+            if p == "status":
+                if v == 0:
+                    production_data["status"]["off"][0] += 1
+                    production_data["status"]["off"][1].append(cell_id)
+                if v == 1:
+                    production_data["status"]["work"][0] += 1
+                    production_data["status"]["work"][1].append(cell_id)
+                if v == 2:
+                    production_data["status"]["wait"][0] += 1
+                    production_data["status"]["wait"][1].append(cell_id)
+                if v == 3:
+                    production_data["status"]["error"][0] += 1
+                    production_data["status"]["error"][1].append(cell_id)
+            if p == "wait":
+                if v == 0:
+                    production_data["wait"]["no"][0] += 1
+                    production_data["wait"]["no"][1].append(cell_id)
+                if v == 1:
+                    production_data["wait"]["wait"][0] += 1
+                    production_data["wait"]["wait"][1].append(cell_id)
+                if v == 2:
+                    production_data["wait"]["full_line"][0] += 1
+                    production_data["wait"]["full_line"][1].append(cell_id)
+
+            if p == "mode":
+                if v == 0:
+                    production_data["mode"]["hand"][0] += 1
+                    production_data["mode"]["hand"][1].append(cell_id)
+                if v == 1:
+                    production_data["mode"]["auto"][0] += 1
+                    production_data["mode"]["auto"][1].append(cell_id)
+
+            if p == "count":
+                count += 1
+
+    # Скорость
+    if cells[5]["count_h"]:
+        production_data["speed"] = cells[5]["count_h"]
+
+    # Объём производства
+    if cells[5]["count_d"]:
+        production_data["all_speed"] = cells[5]["count_d"]
+
+    # Процент брака
+    if cells[5]["count_d"]:
+        production_data["bad"] = int(round(cells[1]["count_d"] / cells[0]["count_d"], 2) * 100)
+
+    # Средняя загрузка
+
+    for c in cells:
+        production_data["work_procent"] += c["load_h"][1]
+
+    production_data["work_procent"] = int(round(production_data["work_procent"] / 6, 2) * 100)
+    return render_template("Онлайн монитор.html", cells=cells, colors=colors, round=round, int=int,
+                           production_data=production_data)
 
 
 @app.route("/logout")

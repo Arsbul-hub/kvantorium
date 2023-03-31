@@ -1,3 +1,7 @@
+body {
+    background-color: #ddeeff;
+}
+
 .title {
     font-size: xx-large;
     margin-top: 20px;
@@ -36,6 +40,9 @@ td p{
     width: 100%
 }
 .title {
-    font-size: 25px;
+    font-size: 50px;
 
+}
+div.anychart-credits {
+    visibility: hidden
 }

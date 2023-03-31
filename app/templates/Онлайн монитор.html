@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="/static/css/monitor.css">
     <link type="text/css" rel="stylesheet" href="static/css/page.css">
+    <link type="text/css" rel="stylesheet" href="static/css/table.css">
     <script src="https://kit.fontawesome.com/6957c188ce.js" crossorigin="anonymous"></script>
     <title>Title</title>
     {% endblock %}
@@ -29,8 +30,24 @@
     <i class="fa fa-long-arrow-right"></i>
     {% endif %}
     {% endfor %}
-    {% endblock %}
 </div>
-
+<br>
+<br>
+<br>
+<table class="main-info stats">
+    <tr class="title stats">
+        <th class="stats">Работает ячеек</th>
+        <th class="stats">Выключено ячеек</th>
+        <th class="stats">Ячеек в состоянии ошибки</th>
+        <th class="stats">Ячеек в состоянии ожидания</th>
+    </tr>
+    <tr class="value stats">
+        <th class="stats">{{production_data["status"]['work'][0]}}</th>
+        <th class="stats">{{production_data["status"]['off'][0]}}</th>
+        <th class="stats">{{production_data["status"]['error'][0]}}</th>
+        <th class="stats">{{production_data["status"]['wait'][0]}}</th>
+    </tr>
+</table>
+{% endblock %}
 </body>
 </html>
