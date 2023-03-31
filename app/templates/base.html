@@ -14,6 +14,7 @@
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
           crossorigin="anonymous">
 
+
     <link rel="stylesheet" type="text/css" href="/static/css/base.css">
     <script src="/static/js/jquery.js"></script>
 
@@ -23,6 +24,12 @@
 
     <link type="text/css" rel="stylesheet" href="static/css/page.css">
     <link type="text/css" rel="stylesheet" href="static/css/index.css">
+    <script>
+        setTimeout(function(){
+	location.reload();
+}, 5000);
+
+    </script>
     {% block head %}{% endblock %}
 </head>
 <body data-template="bruno2"
@@ -39,6 +46,7 @@
         crossorigin="anonymous"></script>
 <div class="l-wrap js-wrap">
 
+    <hr>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>

@@ -73,6 +73,7 @@ anychart.onDocumentLoad(function() {
         {% else %}
         <p>Процент брака: неизвестно</p>
         {% endif %}
+
         {% if production_data["work_procent"] %}
         <p>Средняя загрузка оборудования за час: {{ production_data["work_procent"] }}% </p>
         {% else %}
@@ -84,7 +85,7 @@ anychart.onDocumentLoad(function() {
     <div style="width: 500px;height: 400px" id="container"></div>
     <span class="title">Информация о ячейках</span>
 
-    <a href="{{url_for('monitor')}}">
+
 
         <table class="data">
             <tr>
@@ -100,7 +101,7 @@ anychart.onDocumentLoad(function() {
             {% for cell in table_data %}
             <tr>
                 <td><p>{{cell["index"]}}</p></td>
-                <td><p>{{cells_names[cell["index"]]}}</p></td>
+                <td><a href="{{url_for('cell_info', index=cell['index'])}}"><p>{{cells_names[cell["index"]]}}</p></a></td>
                 <td><p>{{cell["status"]}}</p></td>
                 <td><p>{{cell["wait"]}}</p></td>
                 <td><p>{{cell["speed_hour"]}} деталей</p></td>
@@ -110,7 +111,7 @@ anychart.onDocumentLoad(function() {
             </tr>
             {% endfor %}
         </table>
-    </a>
+
     {% endblock %}
 </div>
 
