@@ -1,17 +1,14 @@
 import random
 import time
 from datetime import datetime
-from pprint import pprint
 
-from flask import render_template, redirect, request
 import requests
-from app import app, login, db, turbo, cells_names, states_names
+from flask import render_template, redirect, request
 from flask_login import login_required, current_user, login_user, logout_user
 
+from app import app, login, cells_names, states_names, db
 from app.forms import LoginForm
-from app.models import User
-from turbo_flask import Turbo
-import threading
+from app.models import User, CellsCause
 
 
 @login.user_loader
@@ -204,7 +201,17 @@ def cell_info():
              "time_hour_procent": int(round(cell["wait_h"][s] / 3600, 2) * 100),
              }
         )
-    return render_template("Информация о ячейке.html", len=len, cell=cell_data, graph=graph, table_data1=table_data1, table_data2=table_data2)
+    table_data3 = []
+    for s in CellsCause.query.all():
+        table_data3.append(
+            {"cell": s.cell,
+             "cause": s.cause,
+             "time_sum": cell["wait_d"][s],
+             "time_procent": s.timestamp,
+             }
+        )
+    return render_template("Информация о ячейке.html", len=len, cell=cell_data, graph=graph, table_data1=table_data1,
+                           table_data2=table_data2)
 
 
 @app.route("/Онлайн монитор")
@@ -223,6 +230,31 @@ def monitor():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route("/Панель оператора", methods=["GET", "POST"])
+def op_panel():
+    cells = requests.get("http://roboprom.kvantorium33.ru/api/current")
+    if cells.status_code == 504:
+        return render_template("errors/502.html")
+
+    colors = [
+        "lightgray",
+        "lightgreen",
+        "lightyellow",
+        "lightred"
+    ]
+    cause = request.args.get("cause")
+    if cause:
+        new_cell_cause = CellsCause(cell=request.args.get("cell"), cause=cause)
+        db.session.add(new_cell_cause)
+        db.session.commit()
+    for cell in cells.json()["data"]:
+        if cell["status"] != 0:
+            CellsCause.query.filter_by(cell=cell["cell"]).delete()
+            db.session.commit()
+    return render_template("Панель оператора.html", cell=request.args.get("cell"), states_names=states_names,
+                           cells=cells.json()["data"], cells_names=cells_names, colors=colors, round=round, int=int)
 
 
 @app.route("/login", methods=["GET", "POST"])
