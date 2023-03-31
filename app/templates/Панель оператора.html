@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="/static/css/op_panel.css">
+    <link type="text/css" rel="stylesheet" href="static/css/page.css">
+    <script src="static/js/dialog.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/6957c188ce.js" crossorigin="anonymous"></script>
+    <title>Title</title>
+    {% endblock %}
+</head>
+<body>
+{% block content %}
+<span class="title">Панель оператора</span>
+<span class="title" style="font-size: 17px; margin-top: 30px">Навигация по ячейкам</span>
+<div id="cells-nav">
+    {% for c in cells %}
+    <span><a href="{{url_for('op_panel', cell=c['cell']-1)}}">{{c["cell"]}}</a></span>
+    {% endfor %}
+</div>
+
+{% if cell %}
+{% if cells[int(cell)]['status'] == 0 %}
+<dialog open id="confirm-dialog-{{cell}}" class="confirm-dialog">
+    <h2 class="dialog-title">Внимание</h2>
+    <p>Вы действительно хотите удалить эту новость?</p>
+    <div class="buttons">
+
+
+        <form action="{{url_for('op_panel')}}">
+
+            <label for="cause">Причина</label><br>
+            <input type="text" list="causes" id="cause" name="cause" value=""><br><br>
+            <datalist id="causes">
+                <option value="Поломка">
+                <option value="Обслуживание">
+                <option value="Наладка">
+            </datalist>
+            <input type="hidden" id="cell" name="cell" value="{{cell}}"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+
+    </div>
+
+
+</dialog>
+{% endif %}
+
+
+<div class="panel">
+
+    <div class="cells">
+
+
+        <div class="cell" style='background-color: {{colors[cells[int(cell)]["status"]]}}'>
+            <span class="title">{{cells[int(cell)]['cell']}} ячейка</span>
+            <p> {{cells_names[cells[int(cell)]['cell']]}}</p>
+
+        </div>
+
+
+    </div>
+
+    <div class="info">
+
+
+        <p>Текущее состояние: {{states_names['status'][cells[int(cell)]['status']]}}</p>
+        <p>Состояние ожидания: {{states_names['wait'][cells[int(cell)]['wait']]}}</p>
+        <p>Количество обработанных заготовок за текущий день: {{cells[int(cell)]['count_d']}}</p>
+        <p>Количество обработанных заготовок за последний час: {{cells[int(cell)]['count_h']}}</p>
+        <p>Средняя загрузка ячейки за текущий день: {{round(cells[int(cell)]['load_d'][1] * 100, 2)}}%</p>
+        <p>Средняя загрузка ячейки за последний час: {{round(cells[int(cell)]['load_h'][1] * 100, 2)}}%</p>
+    </div>
+
+</div>
+{% endif %}
+{% endblock %}
+</body>
+</html>
